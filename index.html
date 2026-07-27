@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VideoFlex Pro — Take Control of Every Video</title>
+<meta name="description" content="Advanced video controls, audio enhancement, and privacy tools for any HTML5 video site. One-time purchase, works everywhere."/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg:       #0a0c10;
+    --bg2:      #111318;
+    --bg3:      #1a1d25;
+    --border:   #1f2330;
+    --accent:   #00d4ff;
+    --accent2:  #0099cc;
+    --purple:   #a78bfa;
+    --green:    #34d399;
+    --text:     #e8edf5;
+    --text-dim: #8b95a8;
+    --text-faint:#4a5568;
+    --danger:   #f87171;
+    --warn:     #fbbf24;
+    --r:        10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── NAV ─────────────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px;
+    background: rgba(10,12,16,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 800; font-size: 17px; letter-spacing: -0.3px;
+  }
+  .nav-logo .dot { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a { color: var(--text-dim); font-size: 14px; font-weight: 500; transition: color .15s; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  .nav-cta {
+    background: var(--accent); color: #000;
+    padding: 9px 20px; border-radius: 6px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.2px;
+    transition: opacity .15s;
+  }
+  .nav-cta:hover { opacity: .85; text-decoration: none; }
+
+  /* ── HERO ─────────────────────────────────────────────────────────── */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: 100px 40px 80px;
+    text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2);
+    color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.8px;
+    padding: 5px 14px; border-radius: 20px; margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .hero-eyebrow::before { content: '●'; font-size: 8px; }
+  h1 {
+    font-size: clamp(36px, 6vw, 68px);
+    font-weight: 900; line-height: 1.08; letter-spacing: -2px;
+    margin-bottom: 24px;
+  }
+  h1 span { color: var(--accent); }
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--text-dim); max-width: 540px; margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #000;
+    padding: 14px 28px; border-radius: 8px;
+    font-weight: 800; font-size: 15px; letter-spacing: -0.2px;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 0 30px rgba(0,212,255,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 40px rgba(0,212,255,0.45); text-decoration: none; }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+    padding: 14px 28px; border-radius: 8px;
+    font-weight: 600; font-size: 15px;
+    transition: border-color .15s;
+  }
+  .btn-secondary:hover { border-color: var(--text-dim); text-decoration: none; }
+  .hero-note { margin-top: 16px; font-size: 13px; color: var(--text-faint); }
+  .hero-note span { color: var(--green); }
+
+  /* ── PREVIEW CARD ────────────────────────────────────────────────── */
+  .preview-wrap { padding: 0 40px 80px; max-width: 900px; margin: 0 auto; }
+  .preview-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+  }
+  .preview-bar {
+    background: var(--bg3); padding: 12px 16px;
+    display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border);
+  }
+  .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .preview-dot.r { background: #f87171; }
+  .preview-dot.y { background: #fbbf24; }
+  .preview-dot.g { background: #34d399; }
+  .preview-url {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 5px 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim);
+  }
+  .preview-content { padding: 32px; }
+  .ext-demo {
+    display: grid; grid-template-columns: 180px 1fr; gap: 20px; align-items: start;
+  }
+  .ext-popup {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; font-size: 11px;
+  }
+  .ext-header {
+    background: var(--bg3); padding: 10px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .ext-logo { font-weight: 800; font-size: 11px; color: var(--text); }
+  .ext-logo em { font-style: normal; color: var(--accent); }
+  .ext-badge { background: rgba(0,212,255,.12); color: var(--accent); font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
+  .ext-tabs { display: flex; background: var(--bg3); border-bottom: 1px solid var(--border); }
+  .ext-tab { flex: 1; padding: 6px 4px; text-align: center; font-size: 9px; color: var(--text-dim); cursor: default; }
+  .ext-tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+  .ext-body { padding: 10px; }
+  .ext-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .ext-label { font-size: 9px; color: var(--text-dim); }
+  .ext-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--accent); background: rgba(0,212,255,.08); padding: 1px 5px; border-radius: 3px; }
+  .ext-slider { width: 100%; height: 3px; background: var(--bg3); border-radius: 3px; margin-bottom: 8px; position: relative; }
+  .ext-slider-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); border-radius: 3px; }
+  .ext-slider-thumb { position: absolute; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+  .ext-chips { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 6px; }
+  .ext-chip { padding: 2px 6px; border-radius: 10px; background: var(--bg3); border: 1px solid var(--border); font-size: 8px; color: var(--text-dim); }
+  .ext-chip.on { background: rgba(0,212,255,.1); border-color: rgba(0,212,255,.3); color: var(--accent); }
+  .ext-tools { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; }
+  .ext-tool { background: var(--bg3); border: 1px solid var(--border); border-radius: 5px; padding: 5px; text-align: center; font-size: 8px; color: var(--text-dim); }
+  .ext-tool.danger { border-color: rgba(248,113,113,.3); color: var(--danger); }
+  .video-preview { background: var(--bg3); border-radius: 10px; overflow: hidden; }
+  .video-thumb {
+    width: 100%; aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #1a1d25 0%, #0d1117 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .play-ring {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center;
+  }
+  .play-tri { width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 16px solid var(--accent); margin-left: 4px; }
+  .video-filters {
+    padding: 10px 12px; border-top: 1px solid var(--border);
+    display: flex; gap: 8px; align-items: center;
+    font-size: 11px; color: var(--text-dim);
+  }
+  .filter-tag { background: rgba(167,139,250,.1); color: var(--purple); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+
+  /* ── SECTION SHARED ──────────────────────────────────────────────── */
+  section { padding: 80px 40px; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 12px;
+  }
+  h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; line-height: 1.15; }
+  h2 span { color: var(--accent); }
+  .section-sub { font-size: 17px; color: var(--text-dim); max-width: 560px; margin-bottom: 48px; }
+
+  /* ── FEATURES ────────────────────────────────────────────────────── */
+  #features { border-top: 1px solid var(--border); }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .feature-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 28px;
+    transition: border-color .2s, transform .2s;
+  }
+  .feature-card:hover { border-color: rgba(0,212,255,.3); transform: translateY(-2px); }
+  .feature-icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 16px;
+  }
+  .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px; }
+  .feature-card p { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
+  .feature-tag { display: inline-block; background: rgba(0,212,255,.08); color: var(--accent); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 10px; }
+  .feature-tag.purple { background: rgba(167,139,250,.08); color: var(--purple); }
+  .feature-tag.green  { background: rgba(52,211,153,.08); color: var(--green); }
+  .feature-tag.warn   { background: rgba(251,191,36,.08); color: var(--warn); }
+
+  /* ── HOW IT WORKS ────────────────────────────────────────────────── */
+  #how { border-top: 1px solid var(--border); background: var(--bg2); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; }
+  .step { display: flex; flex-direction: column; }
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 40px; font-weight: 700;
+    color: var(--border); margin-bottom: 12px; line-height: 1;
+  }
+  .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: 14px; color: var(--text-dim); }
+
+  /* ── WORKS ON ────────────────────────────────────────────────────── */
+  #sites { border-top: 1px solid var(--border); }
+  .sites-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  .site-pill {
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 10px 20px; border-radius: 30px;
+    font-size: 14px; font-weight: 600; color: var(--text-dim);
+    transition: border-color .15s, color .15s;
+  }
+  .site-pill:hover { border-color: var(--accent); color: var(--text); }
+  .site-pill.yt  { --c: #ff4444; }
+  .site-pill.tw  { --c: #9146ff; }
+  .site-pill.nf  { --c: #e50914; }
+  .site-pill.dp  { --c: #0063e5; }
+  .site-pill:hover { border-color: var(--c,var(--accent)); color: var(--c,var(--accent)); }
+  .sites-note { margin-top: 20px; font-size: 13px; color: var(--text-faint); }
+
+  /* ── PRICING ─────────────────────────────────────────────────────── */
+  #pricing { border-top: 1px solid var(--border); }
+  .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 760px; }
+  .price-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 32px;
+  }
+  .price-card.featured {
+    border-color: var(--accent);
+    box-shadow: 0 0 40px rgba(0,212,255,0.12);
+    position: relative;
+  }
+  .price-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #000; font-size: 10px; font-weight: 800;
+    padding: 3px 14px; border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap;
+  }
+  .price-name { font-size: 13px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .price-amount { font-size: 42px; font-weight: 900; letter-spacing: -2px; line-height: 1; margin-bottom: 6px; }
+  .price-amount sup { font-size: 20px; vertical-align: super; letter-spacing: 0; }
+  .price-sub { font-size: 13px; color: var(--text-faint); margin-bottom: 24px; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .price-features li { font-size: 14px; color: var(--text-dim); display: flex; gap: 10px; }
+  .price-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+  .price-features li.dim::before { content: '—'; color: var(--text-faint); }
+  .price-features li.dim { color: var(--text-faint); }
+  .price-btn {
+    display: block; width: 100%; text-align: center;
+    padding: 13px; border-radius: 8px; font-weight: 700; font-size: 14px;
+    transition: opacity .15s;
+  }
+  .price-btn:hover { opacity: .85; text-decoration: none; }
+  .price-btn.solid { background: var(--accent); color: #000; }
+  .price-btn.outline { border: 1px solid var(--border); color: var(--text-dim); }
+  .price-secure { margin-top: 16px; text-align: center; font-size: 12px; color: var(--text-faint); }
+  .price-secure a { color: var(--text-faint); }
+
+  /* ── FAQ ─────────────────────────────────────────────────────────── */
+  #faq { border-top: 1px solid var(--border); background: var(--bg2); }
+  .faq-list { max-width: 640px; display: flex; flex-direction: column; gap: 0; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+  .faq-q { font-weight: 700; font-size: 15px; margin-bottom: 8px; }
+  .faq-a { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px; display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo { font-weight: 800; font-size: 15px; }
+  .footer-logo span { color: var(--accent); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: var(--text-faint); transition: color .15s; }
+  .footer-links a:hover { color: var(--text); text-decoration: none; }
+  .footer-copy { font-size: 12px; color: var(--text-faint); width: 100%; }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────────────── */
+  @media (max-width: 680px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 70px 20px 50px; }
+    section { padding: 60px 20px; }
+    .preview-wrap { padding: 0 20px 60px; }
+    footer { padding: 30px 20px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .ext-demo { grid-template-columns: 1fr; }
+    .video-preview { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <circle cx="11" cy="11" r="10" stroke="#00d4ff" stroke-width="1.5"/>
+      <path d="M8.5 7.5L15.5 11L8.5 14.5V7.5Z" fill="#00d4ff"/>
+    </svg>
+    VideoFlex <span class="dot">Pro</span>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#pricing" class="nav-cta">Get Pro — $4.99</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Chrome Extension · Works Everywhere</div>
+  <h1>Take control of<br/><span>every video</span> you watch</h1>
+  <p class="hero-sub">Speed, volume boost, EQ, visual filters, loop sections, sleep timer, and an emergency privacy mode — all in one toolbar button.</p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 6.5L12.5 9L6.5 11.5V6.5Z" fill="currentColor"/></svg>
+      Get VideoFlex Pro
+    </a>
+    <a href="#features" class="btn-secondary">See all features →</a>
+  </div>
+  <p class="hero-note"><span>✓</span> One-time payment &nbsp;·&nbsp; <span>✓</span> No subscription &nbsp;·&nbsp; <span>✓</span> Works on YouTube, Twitch, Netflix &amp; more</p>
+</div>
+
+<!-- PREVIEW CARD -->
+<div class="preview-wrap">
+  <div class="preview-card">
+    <div class="preview-bar">
+      <div class="preview-dot r"></div>
+      <div class="preview-dot y"></div>
+      <div class="preview-dot g"></div>
+      <div class="preview-url">youtube.com/watch?v=...</div>
+    </div>
+    <div class="preview-content">
+      <div class="ext-demo">
+        <div class="ext-popup">
+          <div class="ext-header">
+            <div class="ext-logo">VideoFlex <em>Pro</em></div>
+            <div class="ext-badge">Active</div>
+          </div>
+          <div class="ext-tabs">
+            <div class="ext-tab active">Controls</div>
+            <div class="ext-tab">Visual</div>
+            <div class="ext-tab">Audio</div>
+          </div>
+          <div class="ext-body">
+            <div class="ext-row"><span class="ext-label">Speed</span><span class="ext-val">1.5×</span></div>
+            <div class="ext-slider"><div class="ext-slider-fill" style="width:45%"></div><div class="ext-slider-thumb" style="left:45%"></div></div>
+            <div class="ext-chips">
+              <div class="ext-chip">0.5×</div>
+              <div class="ext-chip on">1.5×</div>
+              <div class="ext-chip">2×</div>
+              <div class="ext-chip">4×</div>
+            </div>
+            <div class="ext-row" style="margin-top:6px"><span class="ext-label">Volume Boost</span><span class="ext-val">200%</span></div>
+            <div class="ext-slider"><div class="ext-slider-fill" style="width:60%;background:var(--purple)"></div><div class="ext-slider-thumb" style="left:60%;background:var(--purple)"></div></div>
+            <div style="height:8px"></div>
+            <div class="ext-tools">
+              <div class="ext-tool">PiP</div>
+              <div class="ext-tool">📸 Shot</div>
+              <div class="ext-tool danger">🚨 SOS</div>
+            </div>
+          </div>
+        </div>
+        <div class="video-preview">
+          <div class="video-thumb">
+            <div class="play-ring"><div class="play-tri"></div></div>
+          </div>
+          <div class="video-filters">
+            <span>Active:</span>
+            <span class="filter-tag">Cinema Mode</span>
+            <span class="filter-tag">Bass Boost</span>
+            <span class="filter-tag">1.5× Speed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">Features</div>
+    <h2>Everything a power user<br/><span>actually needs</span></h2>
+    <p class="section-sub">Built for people who watch a lot of video and want more control than the default player gives them.</p>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(0,212,255,.1)">⚡</div>
+        <h3>Playback Speed Control</h3>
+        <p>Speed from 0.1× to 16× with quick-tap chips. Keyboard shortcuts adjust on the fly without touching the popup. Speed persists across tabs and sessions.</p>
+        <span class="feature-tag">] faster · [ slower</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(167,139,250,.1)">🔊</div>
+        <h3>Volume Boost + 3-Band EQ</h3>
+        <p>Boost volume up to 500% using Web Audio API. Tune bass, mids, and highs independently. Six one-click audio presets: Cinema, Bass Boost, Vocal, Podcast, and more.</p>
+        <span class="feature-tag purple">Pro</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(52,211,153,.1)">🎨</div>
+        <h3>Visual Filters</h3>
+        <p>Eight real-time CSS filters: brightness, contrast, saturation, hue rotation, sepia, grayscale, invert, and blur. Four quick modes: Warm, Cool, Night, and Cinema.</p>
+        <span class="feature-tag green">8 filters</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(251,191,36,.1)">🔁</div>
+        <h3>A/B Loop Sections</h3>
+        <p>Set a start and end point to loop any segment — perfect for studying a scene, learning a song, or rewatching a moment. Manual time inputs or press a key at the exact spot.</p>
+        <span class="feature-tag warn">Shift+{ / Shift+}</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(248,113,113,.1)">🚨</div>
+        <h3>Emergency Privacy Mode</h3>
+        <p>Press a single key and your video tab closes instantly. A safe site you choose opens in its place. Press the key again to restore your video at the exact timestamp you left.</p>
+        <span class="feature-tag" style="background:rgba(248,113,113,.08);color:var(--danger)">` key</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(0,212,255,.1)">📺</div>
+        <h3>Auto Picture-in-Picture</h3>
+        <p>Video follows you when you switch tabs or scroll down to comments — no manual PiP needed. Works on live streams too. Comes back to full screen when you return.</p>
+        <span class="feature-tag">Tab switch + scroll</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(167,139,250,.1)">💾</div>
+        <h3>Presets &amp; Video Library</h3>
+        <p>Save your exact setup as a named preset and reload it in one tap. Save video links with thumbnails to a searchable library. Download videos where allowed.</p>
+        <span class="feature-tag purple">Pro</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(52,211,153,.1)">⌨️</div>
+        <h3>Fully Remappable Shortcuts</h3>
+        <p>Every action has a keyboard shortcut. Every shortcut can be remapped or disabled from the Settings tab. No conflicts with site hotkeys — uses stopImmediatePropagation.</p>
+        <span class="feature-tag green">15 shortcuts</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-label">Setup</div>
+    <h2>Ready in <span>60 seconds</span></h2>
+    <p class="section-sub" style="margin-bottom:48px">No account. No login. No tracking. Just install and go.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Add to Chrome</h3>
+        <p>Click the install button. Chrome installs the extension in seconds — no restart needed.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Go to any video</h3>
+        <p>Open YouTube, Twitch, Netflix, or any site with an HTML5 video player.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Click the toolbar icon</h3>
+        <p>The VideoFlex popup appears. Your video is detected automatically within a second.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Adjust anything</h3>
+        <p>Change speed, boost volume, apply filters, set a loop — everything updates in real time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKS ON -->
+<section id="sites">
+  <div class="container">
+    <div class="section-label">Compatibility</div>
+    <h2>Works on <span>every</span> HTML5 video site</h2>
+    <p class="section-sub">If there's a video element on the page, VideoFlex can control it.</p>
+    <div class="sites-grid">
+      <div class="site-pill yt">▶ YouTube</div>
+      <div class="site-pill tw">◈ Twitch</div>
+      <div class="site-pill nf">N Netflix</div>
+      <div class="site-pill dp">✦ Disney+</div>
+      <div class="site-pill">Vimeo</div>
+      <div class="site-pill">Prime Video</div>
+      <div class="site-pill">Hulu</div>
+      <div class="site-pill">Crunchyroll</div>
+      <div class="site-pill">Plex</div>
+      <div class="site-pill">Any HTML5 site +</div>
+    </div>
+    <p class="sites-note">DRM-protected content (Netflix, Disney+ downloads) may limit some features. Playback controls and filters work everywhere.</p>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-label">Pricing</div>
+    <h2>One price. <span>Forever.</span></h2>
+    <p class="section-sub">No subscription. No renewal. Pay once and every future update is free.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-amount"><sup>$</sup>0</div>
+        <div class="price-sub">Always free, no card required</div>
+        <ul class="price-features">
+          <li>Speed control (0.1× – 16×)</li>
+          <li>Basic volume slider</li>
+          <li>Brightness &amp; contrast</li>
+          <li>Frame-by-frame navigation</li>
+          <li>A/B loop sections</li>
+          <li class="dim">Volume boost beyond 150%</li>
+          <li class="dim">3-Band EQ &amp; audio presets</li>
+          <li class="dim">Visual filter suite</li>
+          <li class="dim">Emergency mode</li>
+          <li class="dim">Presets &amp; library</li>
+        </ul>
+        <a href="#" class="price-btn outline">Add to Chrome — Free</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-badge">MOST POPULAR</div>
+        <div class="price-name">Pro</div>
+        <div class="price-amount"><sup>$</sup>4<span style="font-size:28px">.99</span></div>
+        <div class="price-sub">One-time · Yours forever</div>
+        <ul class="price-features">
+          <li>Everything in Free</li>
+          <li>Volume boost up to 500%</li>
+          <li>3-Band EQ (Bass / Mids / Highs)</li>
+          <li>6 audio presets</li>
+          <li>8 visual filters + 4 quick modes</li>
+          <li>Emergency privacy mode</li>
+          <li>Auto PiP on tab switch &amp; scroll</li>
+          <li>Save presets &amp; video library</li>
+          <li>Video download</li>
+          <li>Fully remappable shortcuts</li>
+          <li>Per-site settings memory</li>
+          <li>All future updates included</li>
+        </ul>
+        <a href="#" class="price-btn solid">Get Pro — $4.99 once</a>
+        <p class="price-secure">🔒 Secure checkout via <a href="https://lemonsqueezy.com" target="_blank">Lemon Squeezy</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-label">FAQ</div>
+    <h2>Common <span>questions</span></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Does VideoFlex collect any data?</div>
+        <div class="faq-a">No. All settings are stored locally in your browser using Chrome's built-in storage. Nothing is ever sent to a server. No analytics, no tracking, no ads.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I pay again after an update?</div>
+        <div class="faq-a">Never. One payment covers every update forever. We don't do subscriptions.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Does it work on YouTube?</div>
+        <div class="faq-a">Yes — speed control, visual filters, EQ, loop, PiP, and emergency mode all work on YouTube. Video downloads are blocked by YouTube's own DRM, not by us.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What is Emergency Mode?</div>
+        <div class="faq-a">Press the backtick (`) key and your current tab closes instantly. A safe website you configured opens in its place. Press the key again and your video reopens at the exact second you left.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What browsers are supported?</div>
+        <div class="faq-a">Chrome and all Chromium-based browsers (Brave, Edge, Arc, Opera). Firefox support is planned.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I get a refund?</div>
+        <div class="faq-a">Yes. If VideoFlex doesn't work for you, email us within 14 days for a full refund — no questions asked.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">VideoFlex <span>Pro</span></div>
+  <div class="footer-links">
+    <a href="index.html">Privacy Policy</a>
+    <a href="mailto:support@example.com">Support</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="footer-copy">© 2026 VideoFlex Pro. All rights reserved. Made for people who watch a lot of video.</div>
+</footer>
+
+</body>
+</html>
